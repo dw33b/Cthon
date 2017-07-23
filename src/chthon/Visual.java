@@ -8,22 +8,26 @@ import org.newdawn.slick.util.*;
 public class Visual{
     
     public ArrayList<Texture> textures = new ArrayList<Texture>();
-    String name;
+    String type;
+    String sub;
     int rate = 1;
     int frame = 0;
+    public double scale = 1.0;
     boolean bumpMap = false;
     
-    public Visual(String name, int rate, boolean bumpMap){
-        this.name = name;
+    public Visual(String type, String sub, int rate, boolean bumpMap){
+        this.type = type;
+        this.sub = sub;
         this.rate = rate;
         this.bumpMap = bumpMap;
-        initNewTextureGroup(name);
+        initNewTextureGroup(type);
     }
     
-    public Visual(String name, int rate){
-        this.name = name;
+    public Visual(String type, String sub, int rate){
+        this.type = type;
+        this.sub = sub;
         this.rate = rate;
-        initNewTextureGroup(name);
+        initNewTextureGroup(type);
     }
     
     public void draw(int screenX, int screenY){
@@ -31,19 +35,19 @@ public class Visual{
         frame = ((int)Math.round(((System.currentTimeMillis() * rate) % (textures.size() * 1000)) / 1000));
         
         if(bumpMap){
-            drawRect(screenX, screenY, textures.get((frame * 2) - 1).getImageWidth(), textures.get((frame * 2) - 1).getImageHeight(), textures.get((frame * 2) - 1));
+            drawRect(screenX, screenY, textures.get(frame).getImageWidth(), textures.get(frame).getImageHeight(), textures.get(frame));   
         }else{
             drawRect(screenX, screenY, textures.get(frame).getImageWidth(), textures.get(frame).getImageHeight(), textures.get(frame));
         }
         
     }
     
-    public void initNewTextureGroup(String name){
+    public void initNewTextureGroup(String type){
         try{
             int i = 0;
-            while(ResourceLoader.resourceExists(("res/" + name + "/" + name + i + ".png"))){
-                textures.add(TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/" + name + "/" + name + i + ".png")));
-                System.out.println("\n[o]SUCCESS: LOADED \"" + name + i + ".png\"[o]\n[x]IMAGE WIDTH:" + textures.get(i).getImageWidth() + "\n[x]IMAGE HEIGHT:" + textures.get(i).getImageHeight() + "\n[x]TEXTURE WIDTH:" + textures.get(i).getTextureWidth() + "\n[x]TEXTURE HEIGHT:" + textures.get(i).getTextureHeight() + "\n[x]TEXTURE ID:" + textures.get(i).getTextureID());
+            while(ResourceLoader.resourceExists(("res/" + type + "/" + sub + i + ".png"))){
+                textures.add(TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/" + type + "/" + sub + i + ".png")));
+                System.out.println("\n[o]SUCCESS: LOADED \"" + type + "/" + sub + i + ".png\"[o]\n[x]IMAGE WIDTH:" + textures.get(i).getImageWidth() + "\n[x]IMAGE HEIGHT:" + textures.get(i).getImageHeight() + "\n[x]TEXTURE WIDTH:" + textures.get(i).getTextureWidth() + "\n[x]TEXTURE HEIGHT:" + textures.get(i).getTextureHeight() + "\n[x]TEXTURE ID:" + textures.get(i).getTextureID());
                 
                 i++;
             }
@@ -60,11 +64,11 @@ public class Visual{
         GL11.glTexCoord2f(0,0);
 	GL11.glVertex2f(x,y);
 	GL11.glTexCoord2f(1,0);
-	GL11.glVertex2f(x+width,y);
+	GL11.glVertex2f(x + (int)(width * scale),y);
 	GL11.glTexCoord2f(1,1);
-	GL11.glVertex2f(x+width,y+height);
+	GL11.glVertex2f(x + (int)(width * scale),y + (int)(height * scale));
 	GL11.glTexCoord2f(0,1);
-	GL11.glVertex2f(x,y+height);
+	GL11.glVertex2f(x,y + (int)(height * scale));
 	GL11.glEnd();
     }
 }
