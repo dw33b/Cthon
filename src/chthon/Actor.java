@@ -9,7 +9,35 @@ public class Actor{
     public long levelExp;
     public String dispName, type;
     public ArrayList attributes = new ArrayList<String>();
-    public Visual visuals;
+    //public Visual visuals;
+    public ArrayList visuals = new ArrayList<Visual>();
+    public byte action = 0;
+    //public int anim = 0;
+    private final String[] animName = {
+        "idle",
+        "die",
+        
+        "move_up",
+        "move_down",
+        "move_left",
+        "move_right",
+        
+        "attack_up",
+        "attack_down",
+        "attack_left",
+        "attack_right",
+        
+        "aux0",
+        "aux1",
+        "aux2",
+        "aux3",
+        "aux4",
+        "aux5",
+        "aux6",
+        "aux7",
+        "aux8",
+        "aux9"
+    };
     
     public Actor(int x, int y, int worldX, int worldY, int health, int healthMax, String type, String dispName, String... attributes){
         this.x = x;
@@ -20,8 +48,11 @@ public class Actor{
         this.healthMax = healthMax;
         this.type = type;
         this.dispName = dispName;
-        this.visuals = new Visual(this.type, 4, false);
+        //this.visuals.add(new Visual(this.type, 16, false));
         
+        for(int i = 0; i < 1; i++){
+            this.visuals.add(new Visual(this.type, animName[i], 16, false));
+        }
         for(int i = 0; i < attributes.length; i++){
             this.attributes.add(attributes[i]);
         }
@@ -41,7 +72,7 @@ public class Actor{
     }
     
     public void render(){
-        visuals.draw(this.x, this.y);
+        visuals.get(action).draw(this.x, this.y);
     }
     
     //{ MEL , RNG , ESP , CHN , BRL , GRP , DDG , BLK , ACR , IMM , SNK , LIT , PRS , FAB , ALC , SMT }
